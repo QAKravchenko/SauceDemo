@@ -12,6 +12,8 @@ export class InventoryPage {
   readonly cartLink: Locator;
   readonly cartBadge: Locator;
   readonly sortDropdown: Locator;
+  readonly burgerMenuButton: Locator;
+  readonly logoutSidebarLink: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -21,6 +23,8 @@ export class InventoryPage {
     this.cartLink = page.locator('[data-test="shopping-cart-link"]');
     this.cartBadge = page.locator('[data-test="shopping-cart-badge"]');
     this.sortDropdown = page.locator('[data-test="product-sort-container"]');
+    this.burgerMenuButton = page.locator('#react-burger-menu-btn');
+    this.logoutSidebarLink = page.locator('[data-test="logout-sidebar-link"]');
   }
 
   /**
@@ -80,5 +84,15 @@ export class InventoryPage {
    */
   async sortProducts(option: 'az' | 'za' | 'lohi' | 'hilo'): Promise<void> {
     await this.sortDropdown.selectOption(option);
+  }
+
+  /**
+   * Виконує вихід із облікового запису через бічне меню (якщо користувач авторизований)
+   */
+  async logout(): Promise<void> {
+    if (await this.burgerMenuButton.isVisible()) {
+      await this.burgerMenuButton.click();
+      await this.logoutSidebarLink.click();
+    }
   }
 }
